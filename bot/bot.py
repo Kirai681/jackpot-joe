@@ -36,7 +36,16 @@ class Bot(commands.Bot):
         """
         Called before 'on_ready'
         """
-        ...
+        for dirpath, _, filenames in os.walk("./bot/cogs"):
+            for filename in filenames:
+                if not filename.startswith("_") and filename.endswith(".py"):
+                    try:
+                        directory = dirpath.replace(os.sep, ".")
+                        cog_path = f"{directory}.{filename.removesuffix(".py")}"
+                        await self.load_extension(cog_path)
+                        print(f"Loaded cog {filename[:-3]}.")
+                    except Exception as e:
+                        print(f"Error while loading cog {filename[:-3]}: {e}")
 
 
 if __name__ == "__main__":
