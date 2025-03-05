@@ -17,7 +17,7 @@ class Dummy(commands.Cog):
         Initializes the Dummy cog.
 
         Args:
-            bot(commands.Bot): The instance of the bot loading the cog.
+            bot (commands.Bot): The instance of the bot loading the cog.
         """
         self.bot = bot
 
