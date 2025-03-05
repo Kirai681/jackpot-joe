@@ -34,7 +34,7 @@ class Bot(commands.Bot):
 
     async def setup_hook(self) -> None:
         """
-        Called before 'on_ready'
+        Called before 'on_ready'.
         """
         for dirpath, _, filenames in os.walk("./bot/cogs"):
             for filename in filenames:
