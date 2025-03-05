@@ -27,6 +27,6 @@ async def setup(bot: commands.Bot) -> None:
     Asynchronously loads the cog into the bot.
 
     Args:
-        bot(commands.Bot): The instance of the bot loading the cog.
+        bot (commands.Bot): The instance of the bot loading the cog.
     """
     await bot.add_cog(Dummy(bot))
