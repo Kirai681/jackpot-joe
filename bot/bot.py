@@ -40,13 +40,15 @@ class Bot(commands.Bot):
             for filename in filenames:
                 if not filename.startswith("_") and filename.endswith(".py"):
                     try:
-                        cog_path = (
-                            os.path.join(dirpath, filename)
-                            .replace(os.sep, ".")
-                            .replace("/", ".")
-                            .removeprefix("..bot.")
-                            .removesuffix(".py")
+                        relative_path = os.path.relpath(
+                            os.path.join(dirpath, filename),
+                            "./bot",
                         )
+                        cog_path = relative_path.replace(
+                            os.sep,
+                            ".",
+                        ).removesuffix(".py")
+
                         await self.load_extension(cog_path)
                         print(f"Loaded cog '{filename[:-3]}'.")
                     except Exception as e:
