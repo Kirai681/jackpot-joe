@@ -1,7 +1,7 @@
 import discord
 from discord import Embed
 
-from embed_builder import EmbedBuilder
+from utils.embed.embed_builder import EmbedBuilder
 
 from typing import Optional
 
