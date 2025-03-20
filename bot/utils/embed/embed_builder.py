@@ -42,7 +42,7 @@ class EmbedBuilder:
         self.embed.set_author(name=name, icon_url=icon_url)
         return self
 
-    def set_footer(self, text: str, icon_url: Optional[str]) -> Self:
+    def set_footer(self, text: str, icon_url: Optional[str] = None) -> Self:
         """
         Set the footer of the embed.
 
