@@ -4,6 +4,8 @@ import os
 
 from typing import Optional
 
+from utils.embed.embed_director import EmbedDirector
+
 
 class Loader(commands.Cog):
     """
@@ -62,7 +64,54 @@ class Loader(commands.Cog):
             ctx (commands.Context): The context of the invoked command.
             cog (str): The name of the cog to load.
         """
-        await ctx.send(self.find_cog_file(cog))
+        try:
+            cog_path = self.find_cog_file(cog)
+            if not cog_path:
+                raise commands.ExtensionNotFound(name=cog)
+            await self.bot.load_extension(cog_path)
+            embed = EmbedDirector.success(f"Successfully loaded cog `{cog}`.")
+            await ctx.send(embed=embed)
+        except commands.ExtensionAlreadyLoaded:
+            embed = EmbedDirector.error(f"Cog `{cog}` is already loaded.")
+            await ctx.send(embed=embed)
+        except commands.ExtensionNotFound:
+            embed = EmbedDirector.error(f"Cog `{cog}` could not be found.")
+            await ctx.send(embed=embed)
+        except Exception as err:
+            embed = EmbedDirector.error(f"Unexpected error: {err}")
+            await ctx.send(embed=embed)
+
+    @commands.command(name="unload", help="Unloads a specific cog into the bot.")
+    async def unload(
+        self,
+        ctx: commands.Context,
+        cog: str = commands.parameter(
+            description="The name of the cog to unload.",
+        ),
+    ) -> None:
+        """
+        Unloads a specified cog from the bot if it is already loaded.
+
+        Args:
+            ctx (commands.Context): The context of the invoked command.
+            cog (str): The name of the cog to unload.
+        """
+        try:
+            cog_path = self.find_cog_file(cog)
+            if not cog_path:
+                raise commands.ExtensionNotFound(name=cog)
+            await self.bot.unload_extension(cog_path)
+            embed = EmbedDirector.success(f"Successfully unloaded cog `{cog}`.")
+            await ctx.send(embed=embed)
+        except commands.ExtensionNotLoaded:
+            embed = EmbedDirector.error(f"Cog `{cog}` isn't currently loaded.")
+            await ctx.send(embed=embed)
+        except commands.ExtensionNotFound:
+            embed = EmbedDirector.error(f"Cog `{cog}` could not be found.")
+            await ctx.send(embed=embed)
+        except Exception as err:
+            embed = EmbedDirector.error(f"Unexpected error: {err}")
+            await ctx.send(embed=embed)
 
 
 async def setup(bot: commands.Bot) -> None:
