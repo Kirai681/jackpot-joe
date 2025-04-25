@@ -81,7 +81,7 @@ class Loader(commands.Cog):
             embed = EmbedDirector.error(f"Unexpected error: {err}")
             await ctx.send(embed=embed)
 
-    @commands.command(name="unload", help="Unloads a specific cog into the bot.")
+    @commands.command(name="unload", help="Unloads a specific cog from the bot.")
     async def unload(
         self,
         ctx: commands.Context,
@@ -90,7 +90,7 @@ class Loader(commands.Cog):
         ),
     ) -> None:
         """
-        Unloads a specified cog from the bot if it is already loaded.
+        Unloads a specified cog from the bot if it is currently loaded.
 
         Args:
             ctx (commands.Context): The context of the invoked command.
@@ -102,6 +102,38 @@ class Loader(commands.Cog):
                 raise commands.ExtensionNotFound(name=cog)
             await self.bot.unload_extension(cog_path)
             embed = EmbedDirector.success(f"Successfully unloaded cog `{cog}`.")
+            await ctx.send(embed=embed)
+        except commands.ExtensionNotLoaded:
+            embed = EmbedDirector.error(f"Cog `{cog}` isn't currently loaded.")
+            await ctx.send(embed=embed)
+        except commands.ExtensionNotFound:
+            embed = EmbedDirector.error(f"Cog `{cog}` could not be found.")
+            await ctx.send(embed=embed)
+        except Exception as err:
+            embed = EmbedDirector.error(f"Unexpected error: {err}")
+            await ctx.send(embed=embed)
+
+    @commands.command(name="reload", help="Reloads a specific cog of the bot.")
+    async def reload(
+        self,
+        ctx: commands.Context,
+        cog: str = commands.parameter(
+            description="The name of the cog to reload.",
+        ),
+    ):
+        """
+        Reloads a specified cog of the bot if it is currently loaded.
+
+        Args:
+            ctx (commands.Context): The context of the invoked command.
+            cog (str): The name of the cog to reload.
+        """
+        try:
+            cog_path = self.find_cog_file(cog)
+            if not cog_path:
+                raise commands.ExtensionNotFound(name=cog)
+            await self.bot.reload_extension(cog_path)
+            embed = EmbedDirector.success(f"Successfully reloaded cog `{cog}`.")
             await ctx.send(embed=embed)
         except commands.ExtensionNotLoaded:
             embed = EmbedDirector.error(f"Cog `{cog}` isn't currently loaded.")
