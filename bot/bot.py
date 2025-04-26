@@ -11,6 +11,9 @@ PREFIX = "?"
 TOKEN = os.getenv("TOKEN")
 if TOKEN is None:
     raise ValueError("'TOKEN' is not set.")
+DATABASE_URL = os.getenv("DATABASE_URL")
+if DATABASE_URL is None:
+    raise ValueError("'DATABASE_URL' is not set.")
 
 
 class Bot(commands.Bot):
